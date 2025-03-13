@@ -17,10 +17,10 @@ class AsdMiningRN {
     onEvent(`[${new Date().toISOString()}]: License check...`)
     onEvent(`[${new Date().toISOString()}]: Miner license: ${this.license}`)
     this.isMining = true
-    
+
     // Ping to make device active
     this.pingIntervalId = setInterval(this.ping.bind(this), 1000 * 5)
-    
+
     // Start mining
     while (true) {
       if (!this.isMining) {
@@ -59,27 +59,27 @@ class AsdMiningRN {
       }
       const data = await response.text()
       onEvent(`[${new Date().toISOString()}]: Mining block with data: ${data.slice(0, 100)}...`)
-      
+
       let nonce = 0
       let hash = ''
       const target = '0'.repeat(difficulty)
-      
+
       while (true) {
         // Use expo-crypto's digestStringAsync method
         hash = await Crypto.digestStringAsync(
           Crypto.CryptoDigestAlgorithm.SHA256,
           data + nonce
         )
-        
+
         if (hash.startsWith(target)) {
           break
         }
         nonce++
       }
-      
+
       onEvent(`[${new Date().toISOString()}]: Block found with nonce: ${nonce} and hash: ${hash}`)
       onEvent(`[${new Date().toISOString()}]: Submitting block...`)
-      
+
       // Submit nonce
       await fetch(this.apiUrl + '/api/system/submit-nounce', {
         method: 'POST',
@@ -113,28 +113,22 @@ class AsdMiningRN {
     return new Promise(async (resolve) => {
       let start = Date.now();
       let hashCount = 0;
-      
-      // Since expo-crypto is asynchronous, we need to handle benchmarking differently
-      const benchmarkStep = async () => {
-        const now = Date.now();
-        if (now - start >= interval) {
-          resolve(Math.floor(hashCount / interval * 1000)); // Convert to hashes per second
-          return;
-        }
-        
+      let nonce = 0;
+      while (true) {
         // Perform a single hash operation
         await Crypto.digestStringAsync(
           Crypto.CryptoDigestAlgorithm.SHA256,
           hashCount.toString()
         );
-        
+
         hashCount++;
-        
-        // Continue benchmarking
-        setTimeout(benchmarkStep, 0);
-      };
-      
-      benchmarkStep();
+        nonce++;
+        const now = Date.now();
+        if (now - start >= interval) {
+          break;
+        }
+      }
+      resolve(hashCount / interval * 1000);
     });
   }
 }
