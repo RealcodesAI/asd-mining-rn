@@ -45,7 +45,7 @@ class AsdMiningRN {
     }
   }
 
-  async mine(difficulty = 4, onEvent) {
+  async mine(difficulty = 2, onEvent) {
     try {
       onEvent(`[${new Date().toISOString()}]: Fetching pending transactions...`)
       const response = await fetch(this.apiUrl + '/api/system/pending-txs', {
