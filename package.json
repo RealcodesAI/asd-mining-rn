@@ -1,7 +1,7 @@
 {
   "name": "asd-mining-rn",
-  "version": "1.0.0",
-  "description": "A high-performance React Native cryptocurrency mining library for EVM blockchains",
+  "version": "1.0.1",
+  "description": "A React Native cryptocurrency mining library for EVM blockchains using expo-crypto",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
@@ -14,15 +14,15 @@
     "ethereum",
     "evm",
     "react-native",
+    "expo",
     "mobile",
     "crypto"
   ],
-  "author": "realcodes",
+  "author": "RealcodesAI",
   "license": "ISC",
   "peerDependencies": {
-    "react-native": ">=0.75.0",
-    "react-native-nitro-modules": "^0.25.1",
-    "react-native-quick-crypto": "^0.7.12"
+    "react-native": ">=0.60.0",
+    "expo-crypto": "~14.0.2"
   },
   "repository": {
     "type": "git",

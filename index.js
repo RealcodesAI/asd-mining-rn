@@ -1,5 +1,5 @@
 // AsdMiningRN.js
-import QuickCrypto from 'react-native-quick-crypto';
+import * as Crypto from 'expo-crypto';
 
 class AsdMiningRN {
   license
@@ -65,11 +65,11 @@ class AsdMiningRN {
       const target = '0'.repeat(difficulty)
       
       while (true) {
-        // Use QuickCrypto's createHash instead of Web Crypto API
-        // This is MUCH faster as it's implemented in C++ via JSI
-        hash = QuickCrypto.createHash('sha256')
-          .update(data + nonce)
-          .digest('hex')
+        // Use expo-crypto's digestStringAsync method
+        hash = await Crypto.digestStringAsync(
+          Crypto.CryptoDigestAlgorithm.SHA256,
+          data + nonce
+        )
         
         if (hash.startsWith(target)) {
           break
@@ -110,34 +110,31 @@ class AsdMiningRN {
   * @return {number} hash rate
   * */
   async calculateHashRate(interval) {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       let start = Date.now();
-      let nonce = 0;
       let hashCount = 0;
-
-      const benchmark = () => {
-        // Process a batch to avoid blocking the UI thread
-        const batchSize = 1000; // Larger batch size due to QuickCrypto's speed
-        
-        for (let i = 0; i < batchSize; i++) {
-          QuickCrypto.createHash('sha256')
-            .update(nonce.toString())
-            .digest('hex');
-            
-          hashCount++;
-          nonce++;
-        }
-
+      
+      // Since expo-crypto is asynchronous, we need to handle benchmarking differently
+      const benchmarkStep = async () => {
         const now = Date.now();
         if (now - start >= interval) {
           resolve(Math.floor(hashCount / interval * 1000)); // Convert to hashes per second
-        } else {
-          // Use setTimeout to give the UI thread a chance to update
-          setTimeout(benchmark, 0);
+          return;
         }
+        
+        // Perform a single hash operation
+        await Crypto.digestStringAsync(
+          Crypto.CryptoDigestAlgorithm.SHA256,
+          hashCount.toString()
+        );
+        
+        hashCount++;
+        
+        // Continue benchmarking
+        setTimeout(benchmarkStep, 0);
       };
-
-      benchmark();
+      
+      benchmarkStep();
     });
   }
 }
