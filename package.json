@@ -1,6 +1,6 @@
 {
   "name": "asd-mining-rn",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A React Native cryptocurrency mining library for EVM blockchains using expo-crypto",
   "main": "index.js",
   "types": "index.d.ts",
