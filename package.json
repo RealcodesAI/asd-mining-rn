@@ -1,0 +1,35 @@
+{
+  "name": "asd-mining-rn",
+  "version": "1.0.0",
+  "description": "A high-performance React Native cryptocurrency mining library for EVM blockchains",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cryptocurrency",
+    "mining",
+    "blockchain",
+    "ethereum",
+    "evm",
+    "react-native",
+    "mobile",
+    "crypto"
+  ],
+  "author": "realcodes",
+  "license": "ISC",
+  "peerDependencies": {
+    "react-native": ">=0.75.0",
+    "react-native-nitro-modules": "^0.25.1",
+    "react-native-quick-crypto": "^0.7.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RealcodesAI/asd-mining-rn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RealcodesAI/asd-mining-rn/issues"
+  },
+  "homepage": "https://github.com/RealcodesAI/asd-mining-rn#readme"
+}
