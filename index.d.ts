@@ -3,13 +3,13 @@ declare class AsdMiningRN {
   isMining: boolean;
   apiUrl: string;
   pingIntervalId: number | null;
-
+  static instance: AsdMiningRN | null;
   /**
    * Creates an instance of AsdMiningRN.
    * @param {string} license - The license key for mining
    * @param {string} apiUrl - The API URL for the mining pool
    */
-  constructor(license: string, apiUrl: string);
+  private constructor(license: string, apiUrl: string);
 
   /**
    * Starts the mining process
@@ -17,6 +17,14 @@ declare class AsdMiningRN {
    * @returns {Promise<void>}
    */
   start(onEvent: (message: string) => void): Promise<void>;
+
+  /**
+   * Creates an instance of AsdMining.
+   * @param {string} license - The license key for mining
+   * @param {string} apiUrl - The API URL for the mining pool
+   * @returns {AsdMiningRN}
+   */
+  static getInstance(license: string, apiUrl: string): AsdMiningRN;
 
   /**
    * Pings the server to keep the device active

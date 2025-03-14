@@ -6,10 +6,18 @@ class AsdMiningRN {
   isMining = false
   apiUrl
   pingIntervalId = null
+  static instance = null
 
   constructor(license, apiUrl) {
     this.license = license
     this.apiUrl = apiUrl
+  }
+
+  static getInstance(license, apiUrl) {
+    if (!AsdMiningRN.instance) {
+      AsdMiningRN.instance = new AsdMiningRN(license, apiUrl)
+    }
+    return AsdMiningRN.instance
   }
 
   async start(onEvent) {

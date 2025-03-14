@@ -30,7 +30,7 @@ import AsdMiningRN from 'asd-mining-rn';
 import { Alert } from 'react-native';
 
 // Initialize the miner with your license key and API URL
-const miner = new AsdMiningRN('your-license-key', 'https://api.example.com');
+const miner = AsdMiningRN.getInstance('your-license-key', 'https://api.example.com');
 
 // Calculate hash rate
 miner.calculateHashRate(5000).then(hashRate => {
