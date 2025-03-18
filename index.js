@@ -66,7 +66,7 @@ class AsdMiningRN {
         onEvent(`[${new Date().toISOString()}]: Miner stopped successfully`)
         break
       }
-      await this.mine(4, onEvent)
+      await this.mine(2, onEvent)
     }
   }
 
