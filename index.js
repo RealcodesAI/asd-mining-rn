@@ -66,7 +66,7 @@ class AsdMiningRN {
         onEvent(`[${new Date().toISOString()}]: Miner stopped successfully`)
         break
       }
-      await this.mine(3, onEvent)
+      await this.mine(4, onEvent)
     }
   }
 
@@ -114,10 +114,7 @@ class AsdMiningRN {
 
       while (true) {
         // Use expo-crypto's digestStringAsync method
-        hash = await Crypto.digestStringAsync(
-          Crypto.CryptoDigestAlgorithm.SHA256,
-          data + nonce
-        )
+        hash = this.advancedHash(data + nonce, 64)
 
         if (hash.startsWith(target)) {
           break
