@@ -20,6 +20,34 @@ class AsdMiningRN {
     return AsdMiningRN.instance
   }
 
+  createHash(input, seed = 0) {
+    // Convert input to string if it's not already
+    const str = String(input);
+  
+    // FNV-1a parameters
+    const PRIME = 16777619;
+    const OFFSET_BASIS = 2166136261;
+  
+    // Initialize hash with seed
+    let hash = OFFSET_BASIS ^ seed;
+  
+    // Process each character in the input string
+    for (let i = 0; i < str.length; i++) {
+      // Get the character code
+      const char = str.charCodeAt(i);
+  
+      // FNV-1a algorithm
+      hash ^= char;
+      hash = Math.imul(hash, PRIME) | 0; // Use Math.imul for 32-bit multiplication
+    }
+  
+    // Convert to unsigned 32-bit integer
+    hash = hash >>> 0;
+  
+    // Convert to hexadecimal string
+    return hash.toString(16).padStart(8, '0');
+  }
+
   async start(onEvent) {
     onEvent(`[${new Date().toISOString()}]: Starting mining`)
     onEvent(`[${new Date().toISOString()}]: License check...`)
@@ -40,6 +68,18 @@ class AsdMiningRN {
       }
       await this.mine(3, onEvent)
     }
+  }
+
+  advancedHash(input, length = 32) {
+    let result = '';
+  
+    // Use different seeds to generate hash segments until we reach desired length
+    for (let i = 0; result.length < length; i++) {
+      result += this.createHash(input + i, i);
+    }
+  
+    // Trim to exact length
+    return result.substring(0, length);
   }
 
   async ping() {
@@ -124,10 +164,7 @@ class AsdMiningRN {
       let nonce = 0;
       while (true) {
         // Perform a single hash operation
-        await Crypto.digestStringAsync(
-          Crypto.CryptoDigestAlgorithm.SHA256,
-          hashCount.toString()
-        );
+        this.advancedHash(nonce, 64);
 
         hashCount++;
         nonce++;
